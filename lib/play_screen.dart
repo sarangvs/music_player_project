@@ -37,7 +37,7 @@ class PlayScreenState extends State<PlayScreen> {
   dynamic songId_2;
   dynamic songData_2;
 
-  late final PageManger _pageManager;
+  //late final PageManger _pageManager;
 
   final AudioPlayer player = AudioPlayer();
   List<String> listName = [];
@@ -45,12 +45,11 @@ class PlayScreenState extends State<PlayScreen> {
   @override
   void initState() {
     super.initState();
-   _pageManager = PageManger();
+  // _pageManager = PageManger();
     addUser(songTitle_2, songId_2, songData_2);
     handler =DatabaseHandler();
     setSong(widget.songInfo);
   songFav();
-
   }
 
 

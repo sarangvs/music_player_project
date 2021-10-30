@@ -8,12 +8,12 @@ class DatabaseHandler {
 
   Future<Database> initializeDB() async {
     String dbpath = await getDatabasesPath();
-    return openDatabase(join(dbpath, "favSongDB.db"),
+    return openDatabase(join(dbpath, "favSongsDb.db"),
       version: 1,
       onCreate: (database, version,) async {
         print("Creating favourite SONG");
         await database.execute(
-          "CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,num INTEGER NOT NULL,location TEXT NOT NULL)",);
+          "CREATE TABLE users(num INTEGER PRIMARY KEY,name TEXT NOT NULL,location TEXT NOT NULL)",);
       },);
   }
 
@@ -26,12 +26,14 @@ class DatabaseHandler {
     return result;
   }
 
+
   Future <List<User>> retrieveUsers() async {
     final Database db = await initializeDB();
     final List <Map<String, Object?>>queryResult = await db.query('users');
     debugPrint("Queryresult: $queryResult");
     return queryResult.map((e) => User.fromMap(e)).toList();
   }
+
 
   Future<void> deleteUser(int id) async {
     final db = await initializeDB();
@@ -41,6 +43,8 @@ class DatabaseHandler {
       whereArgs: [id],
     );
   }
+
+
 ///fetch fav///
   Future <List<String>> retrieveFavUsers() async {
     final Database db = await initializeDB();
@@ -57,8 +61,7 @@ class DatabaseHandler {
       songNameSet.add(data);
     }
     final List<String> listSongName = [...songNameSet.toList()];
-  return listSongName;
+return listSongName;
   }
-
 
 }

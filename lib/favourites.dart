@@ -79,9 +79,9 @@ class _FavouritesState extends State<Favourites> {
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: const Icon(Icons.delete_forever),
                         ),
-                        key: ValueKey<int>(snapshot.data![index].id!),
+                        key: ValueKey<int>(snapshot.data![index].num),
                         onDismissed: (DismissDirection direction) async {
-                          await handler!.deleteUser(snapshot.data![index].id!);
+                          await handler!.deleteUser(snapshot.data![index].num);
                           setState(() {
                             snapshot.data!.remove(snapshot.data![index]);
                           });

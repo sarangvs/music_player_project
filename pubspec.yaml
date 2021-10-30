@@ -42,7 +42,6 @@ dependencies:
   marker: ^0.2.2
   awesome_notifications: ^0.0.6+10
   provider: ^6.0.1
-  audio_service: ^0.18.0
   on_audio_query: ^2.4.2
   audio_video_progress_bar: ^0.9.0
   just_audio_background: ^0.0.1-beta.1
@@ -50,6 +49,7 @@ dependencies:
   sqflite: ^2.0.0+4
   path: ^1.8.0
   path_provider: ^2.0.5
+  rxdart: ^0.27.2
 
 
 
