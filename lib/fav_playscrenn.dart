@@ -6,14 +6,14 @@ import 'package:just_audio/just_audio.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:rxdart/rxdart.dart';
 import 'managers/page_manager.dart';
+import './notification_controll.dart';
 
 
 class FavPlayScreen extends StatefulWidget {
-  dynamic songData;
-  dynamic songTitle;
-  dynamic songID;
-   FavPlayScreen({required this.songData,required this.songTitle,required this.songID,required this.changeTrack,required this.Key}) : super(key: Key);
+  SongModel songData;
+   FavPlayScreen({required this.songData,required this.changeTrack,required this.Key}) : super(key: Key);
 
   Function changeTrack;
  final GlobalKey<FavPlayScreenState> Key;
@@ -36,6 +36,11 @@ class FavPlayScreenState extends State<FavPlayScreen> {
     super.initState();
     // _pageManager = PageManger();
     setSong(widget.songData);
+    player.play();
+  }
+  void dispose(){
+    super.dispose();
+    player.dispose();
   }
 
   double valueReturn(double min, double max, double current){
@@ -56,9 +61,9 @@ class FavPlayScreenState extends State<FavPlayScreen> {
   // }
 
 
-  void setSong(dynamic songData) async {
+  void setSong(SongModel songData) async {
     widget.songData = songData;
-    await player.setUrl(widget.songData);
+    await player.setUrl(widget.songData.data);
     currentValue = minimumValue;
     maximumValue = player.duration!.inMilliseconds.toDouble();
     if (currentValue == maximumValue) {
@@ -123,6 +128,19 @@ class FavPlayScreenState extends State<FavPlayScreen> {
     Icons.pause_circle_filled,
   ];
 
+
+
+  Stream<PositionData> get _positionDataStream =>
+      Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+          player.positionStream,
+          player.bufferedPositionStream,
+          player.durationStream,
+              (position, bufferedPosition, duration) =>
+              PositionData(position, duration ?? Duration.zero));
+
+
+
+
   @override
   Widget build(BuildContext context) {
     var Height = MediaQuery.of(context).size.height;
@@ -138,22 +156,28 @@ class FavPlayScreenState extends State<FavPlayScreen> {
                   left: 0,
                   right: 0,
                   height: Height - 168,
-                  child: QueryArtworkWidget(
-                    id: widget.songID,
-                    type: ArtworkType.AUDIO,
-                    artworkFit: BoxFit.cover,
-                    artworkBorder: BorderRadius.zero,
-                    nullArtworkWidget: Container(
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.zero,
-                          color: Colors.black),
-                      child:  const Image(
-                        image: AssetImage('images/musicimage.png'),fit: BoxFit.cover,
-                      ),
-                      // height: 150,
-                      // width: 100,
-                    ),
-                  )
+                  child:StreamBuilder<SequenceState?>(
+                    stream: player.sequenceStateStream,
+                    builder: (context, snapshot) {
+                      return QueryArtworkWidget(
+                        id: widget.songData.id,
+                        type: ArtworkType.AUDIO,
+                        artworkFit: BoxFit.cover,
+                        artworkBorder: BorderRadius.zero,
+                        nullArtworkWidget: Container(
+                          decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.zero,
+                              color: Colors.black),
+                          child: const Image(
+                            image: AssetImage('images/musicimage.png'),
+                            fit: BoxFit.cover,
+                          ),
+                          // height: 150,
+                          // width: 100,
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 Positioned(
                   top: 0,
@@ -247,15 +271,20 @@ class FavPlayScreenState extends State<FavPlayScreen> {
                         SizedBox(
                           height: 50,
                           width: Width,
-                          child: Marquee(
-                            text: widget.songTitle,
-                            style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'roboto',
-                                color: Colors.black87),
-                            blankSpace: 150,
-                            velocity: 50,
+                          child:  StreamBuilder<SequenceState?>(
+                            stream: player.sequenceStateStream,
+                            builder: (context, snapshot) {
+                              return Marquee(
+                                text: widget.songData.title,
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'roboto',
+                                    color: Colors.black87),
+                                blankSpace: 150,
+                                velocity: 50,
+                              );
+                            },
                           ),
                         ),
                          const Text('<unknown>'),
@@ -265,86 +294,103 @@ class FavPlayScreenState extends State<FavPlayScreen> {
 
                         SizedBox(
                             width: Width-15,
-                            height: 25,
-                            child: Slider(
-                                inactiveColor: Colors.grey,
-                                activeColor: Colors.orange,
-                                min: minimumValue,
-                                max: maximumValue,
-                                value: valueReturn(maximumValue, maximumValue, currentValue),
-                                onChanged: (value) {
-                                  setState(() {
-                                    currentValue = value;
-                                    player.seek(Duration(
-                                        milliseconds: currentValue.toInt()));
-                                  });
-                                }),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(currentTime,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                ),),
-                              Text(endTime,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                ),),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(
-                              width: 50,
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.fast_rewind,
-                                size: 30,
-                              ),
-                              onPressed: () {
-                                widget.changeTrack(false);
-                                debugPrint('previous');
-                              },
-                              //       padding: const EdgeInsets.all(8.0),
-                            ),
-                            SizedBox(
-                                height: 90,
-                                width: 90,
-                                child: GestureDetector(
-                                  child: Icon(
-                                    isPlaying
-                                        ? Icons.pause_circle_filled
-                                        : Icons.play_circle_fill,
-                                    color: Colors.orange,
-                                    size: 70,
-                                  ),
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () {
-                                    changeStatus();
+                            height: 50,
+                            child: StreamBuilder<PositionData>(
+                              stream: _positionDataStream,
+                              builder: (context, snapshot) {
+                                final positionData = snapshot.data;
+                                return SeekBar(
+                                  duration:
+                                  positionData?.duration ?? Duration.zero,
+                                  position:
+                                  positionData?.position ?? Duration.zero,
+                                  onChangeEnd: (newPosition) {
+                                    player.seek(newPosition);
                                   },
-                                ),
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.fast_forward,
-                                size: 30,
-                              ),
-                              onPressed: () {
-                                widget.changeTrack(true);
-                                debugPrint('next');
+                                );
                               },
                             ),
-                            const SizedBox(
-                              width: 50,
+                        ),
+                        // Container(
+                        //   padding: const EdgeInsets.symmetric(horizontal: 30),
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //     children: [
+                        //       Text(currentTime,
+                        //         style: const TextStyle(
+                        //           color: Colors.black,
+                        //           fontSize: 15,
+                        //         ),),
+                        //       Text(endTime,
+                        //         style: const TextStyle(
+                        //           color: Colors.black,
+                        //           fontSize: 15,
+                        //         ),),
+                        //     ],
+                        //   ),
+                        // ),
+                        Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  width: 50,
+                                ),
+                                StreamBuilder<SequenceState?>(
+                                  stream: player.sequenceStateStream,
+                                  builder: (context, snapshot) => IconButton(
+                                      icon: const Icon(Icons.fast_rewind,
+                                          size: 30, color: Colors.black),
+                                      onPressed: () {
+                                        widget.changeTrack(false);
+                                      }),
+                                ),
+                                SizedBox(
+                                    height: 90,
+                                    width: 90,
+                                    child:StreamBuilder<PlayerState>(
+                                      stream: player.playerStateStream,
+                                      builder: (context, snapshot) {
+                                        final playerState = snapshot.data;
+                                        final processingState =
+                                            playerState?.processingState;
+                                        final playing = playerState?.playing;
+                                        if (playing != true) {
+                                          return IconButton(
+                                            icon: const Icon(
+                                              Icons.play_circle_fill,
+                                              color: Colors.orange,
+                                              size: 70,
+                                            ),
+                                            onPressed: player.play,
+                                          );
+                                        } else {
+                                          return IconButton(
+                                            icon: const Icon(
+                                                Icons.pause_circle_filled,
+                                                color: Colors.orange,
+                                                size: 70),
+                                            onPressed: player.pause,
+                                          );
+                                        }
+                                      },
+                                    ),
+                                ),
+                                StreamBuilder<SequenceState?>(
+                                  stream: player.sequenceStateStream,
+                                  builder: (context, snapshot) => IconButton(
+                                      icon: const Icon(Icons.fast_forward,
+                                          size: 30, color: Colors.black),
+                                      onPressed: () {
+                                        widget.changeTrack(true);
+                                      }),
+                                ),
+                                const SizedBox(
+                                  width: 50,
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -355,4 +401,11 @@ class FavPlayScreenState extends State<FavPlayScreen> {
               ],
             )));
   }
+}
+
+class PositionData {
+  final Duration position;
+  final Duration duration;
+
+  PositionData(this.position, this.duration);
 }

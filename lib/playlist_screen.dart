@@ -165,16 +165,17 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             ),
                           ),
                           onTap: () {
-                            dynamic songData = snapshot.data![index].path;
-                            dynamic songTitle = snapshot.data![index].songName;
-                            dynamic songImage = snapshot.data![index].songID;
+                            for(int i = 0; i<playlistSongs.length;i++){
+                              if(playlistSongs[i].id== snapshot.data![index].songID){
+                                currentIndex=i;
+                                break;
+                              }
+                            }
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => FavPlayScreen(
-                                      songData: songData,
-                                      songTitle: songTitle,
-                                      songID: songImage,
+                                      songData: playlistSongs[currentIndex],
                                       changeTrack: changeTrack,
                                       Key: Key),
                                 ));

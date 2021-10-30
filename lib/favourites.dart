@@ -118,16 +118,17 @@ class _FavouritesState extends State<Favourites> {
                             ),
                           ),
                           onTap: () {
-                            dynamic songData = snapshot.data![index].location;
-                            dynamic songTitle = snapshot.data![index].name;
-                            dynamic songID = snapshot.data![index].num;
+                           for(int i = 0; i<favSongs.length;i++){
+                             if(favSongs[i].id== snapshot.data![index].num){
+                               currentIndex=i;
+                               break;
+                             }
+                           }
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => FavPlayScreen(
-                                    songData: songData,
-                                    songTitle: songTitle,
-                                    songID: songID,
+                                    songData: favSongs[currentIndex],
                                     changeTrack: changeTrack,
                                     Key: Key,
                                   ),
