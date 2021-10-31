@@ -4,6 +4,7 @@ import 'package:musicplayer/Database/playlist_folder_handler.dart';
 import 'package:musicplayer/play_screen.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'Database/playlist_songs.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SelectPlaylistSongs extends StatefulWidget {
   int playlistiddd;
@@ -142,6 +143,7 @@ class _SelectPlaylistSongsState extends State<SelectPlaylistSongs> {
                                 path_2 = playlistsongs[index].data;
                                 addUsers(
                                     songID_2, playlistID_2, songName_2, path_2);
+                                showToast();
                                 // add == 0 ? add = 1 : add = 0;
                               });
                             },
@@ -181,4 +183,16 @@ class _SelectPlaylistSongsState extends State<SelectPlaylistSongs> {
       ),
     ));
   }
+
+ void showToast(){
+   Fluttertoast.showToast(
+       msg: "Song added to playlist",
+       toastLength: Toast.LENGTH_SHORT,
+       gravity: ToastGravity.BOTTOM,
+       timeInSecForIosWeb: 1,
+       backgroundColor: Colors.black87,
+       textColor: Colors.white,
+       fontSize: 15.0
+   );
+ }
 }
