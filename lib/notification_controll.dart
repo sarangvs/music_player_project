@@ -63,26 +63,29 @@ class _SeekBarState extends State<SeekBar> {
       ),
       Positioned(
         left: 20.0,
-        bottom: -5,
+        bottom: -4,
         child: Text(
             RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
-                    .firstMatch("$_remaining")
+                    .firstMatch("$_position")
                     ?.group(1) ??
-                '$_remaining',
-            style: TextStyle(color: Colors.black)),
+                '$_position',
+            style: TextStyle(color: Colors.black,fontSize: 15)),
       ),
       Positioned(
         right: 20.0,
-        bottom: -6,
-        child: Text(
-          widget.duration.inMinutes.toDouble().toString(),
-          style: const TextStyle(color: Colors.black),
-        ),
+        bottom: -4,
+        child:Text(
+            RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
+                .firstMatch("$_remaining")
+                ?.group(1) ??
+                '$_remaining',
+            style: TextStyle(color: Colors.black,fontSize: 15)),
       ),
     ]);
   }
 
-  Duration get _remaining => widget.duration - widget.position;
+  Duration get _remaining => widget.duration;
+  Duration get _position => widget.position;
 }
 //
 // class HiddenThumbComponentShape extends SliderComponentShape {

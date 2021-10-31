@@ -80,11 +80,19 @@ class _SettingspageState extends State<Settingspage> {
                     color: Colors.black,
                   ),
                   minLeadingWidth: 10,
-                  onTap: () {},
+                  onTap: () {
+                    showAboutDialog(
+                      context: context,
+                      applicationName: "Lyrica",
+                      applicationVersion: '1.0.1',
+                      applicationLegalese: "Copyright © Lyrica ${DateTime.now().year.toString()}",
+                    );
+                  },
                 ),
               ],
             ),
           )),
     );
   }
+
 }

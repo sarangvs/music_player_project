@@ -352,7 +352,7 @@ class PlayScreenState extends State<PlayScreen> {
                         ),
                         SizedBox(
                           width: Width - 15,
-                          height: 25,
+                          height: 50,
                           child: StreamBuilder<PositionData>(
                             stream: _positionDataStream,
                             builder: (context, snapshot) {
@@ -408,6 +408,7 @@ class PlayScreenState extends State<PlayScreen> {
                                           size: 30, color: Colors.black),
                                       onPressed: () {
                                         widget.changeTrack(false);
+                                        songFav();
                                       }),
                                 ),
                                 SizedBox(
@@ -448,6 +449,7 @@ class PlayScreenState extends State<PlayScreen> {
                                           size: 30, color: Colors.black),
                                       onPressed: () {
                                         widget.changeTrack(true);
+                                        songFav();
                                       }),
                                 ),
                                 const SizedBox(
