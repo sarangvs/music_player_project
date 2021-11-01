@@ -3,16 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:audio_service/audio_service.dart';
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:provider/provider.dart';
 import 'Database/database_handler.dart';
 import 'Database/db.dart';
 import 'package:rxdart/rxdart.dart';
-import 'managers/page_manager.dart';
-import 'package:just_audio_background/just_audio_background.dart';
-
 import 'notification_controll.dart';
 
 class PlayScreen extends StatefulWidget {
@@ -150,9 +144,9 @@ class PlayScreenState extends State<PlayScreen> {
 
   void nextSong() {
     setState(() {
-      if (currentValue >= maximumValue) {
+
         widget.changeTrack(true);
-      }
+
     });
   }
 
@@ -172,10 +166,6 @@ class PlayScreenState extends State<PlayScreen> {
 //  bool isPlaying=false;
   bool isPaused = false;
 
-  final List<IconData> _icons = [
-    Icons.play_circle_fill,
-    Icons.pause_circle_filled,
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -346,7 +336,20 @@ class PlayScreenState extends State<PlayScreen> {
                             },
                           ),
                         ),
-                        Text(widget.songInfo.artist.toString()),
+                        StreamBuilder<SequenceState?>(
+                          stream: player.sequenceStateStream,
+                          builder: (context, snapshot) {
+                            return Text(
+                              widget.songInfo.artist.toString(),
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'roboto',
+                                  color: Colors.black87),
+                            );
+                          },
+                        ),
+
                         const SizedBox(
                           height: 10,
                         ),
@@ -418,8 +421,7 @@ class PlayScreenState extends State<PlayScreen> {
                                     stream: player.playerStateStream,
                                     builder: (context, snapshot) {
                                       final playerState = snapshot.data;
-                                      final processingState =
-                                          playerState?.processingState;
+                                      final processingState = playerState?.processingState;
                                       final playing = playerState?.playing;
                                       if (playing != true) {
                                         return IconButton(
@@ -430,15 +432,23 @@ class PlayScreenState extends State<PlayScreen> {
                                           ),
                                           onPressed: player.play,
                                         );
-                                      } else {
+                                      } else if (processingState !=
+                                          ProcessingState.completed) {
                                         return IconButton(
-                                          icon: const Icon(
+                                          icon:
+                                          const Icon(
                                               Icons.pause_circle_filled,
                                               color: Colors.orange,
                                               size: 70),
                                           onPressed: player.pause,
                                         );
+                                      } else {
+                                        return StreamBuilder<PlayerState>(
+                                            stream: player.playerStateStream,
+                                         builder: (context, snapshot) {
+                                          return  widget.changeTrack(true);
                                       }
+                                        );}
                                     },
                                   ),
                                 ),

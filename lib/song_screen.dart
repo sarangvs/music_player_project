@@ -2,11 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:musicplayer/Database/db.dart';
 import 'package:musicplayer/play_screen.dart';
-import 'package:musicplayer/searchbar.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'Database/database_handler.dart';
 
 class Songscreen extends StatefulWidget {
   const Songscreen({Key? key}) : super(key: key);

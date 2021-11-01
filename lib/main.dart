@@ -3,16 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:musicplayer/favourites.dart';
 import 'package:musicplayer/my_playlist.dart';
 import 'package:musicplayer/searchbar.dart';
-import 'package:musicplayer/select_playlist_track.dart';
 import 'package:musicplayer/settings.dart';
 import './song_screen.dart';
 import './play_screen.dart';
-import 'managers/page_manager.dart';
-import 'managers/service.dart';
 import 'package:just_audio_background/just_audio_background.dart';
-import 'package:musicplayer/searchbar.dart';
-import 'package:audio_service/audio_service.dart';
-import './notification_controll.dart';
+
+
 
 void main() async {
  // await setupServiceLocator();

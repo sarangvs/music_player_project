@@ -3,11 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:audio_service/audio_service.dart';
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:rxdart/rxdart.dart';
-import 'managers/page_manager.dart';
 import './notification_controll.dart';
 
 
@@ -123,10 +120,6 @@ class FavPlayScreenState extends State<FavPlayScreen> {
 
   bool isPaused=false;
 
-  final List<IconData> _icons=[
-    Icons.play_circle_fill,
-    Icons.pause_circle_filled,
-  ];
 
 
 
@@ -354,8 +347,6 @@ class FavPlayScreenState extends State<FavPlayScreen> {
                                       stream: player.playerStateStream,
                                       builder: (context, snapshot) {
                                         final playerState = snapshot.data;
-                                        final processingState =
-                                            playerState?.processingState;
                                         final playing = playerState?.playing;
                                         if (playing != true) {
                                           return IconButton(
