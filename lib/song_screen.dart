@@ -58,8 +58,8 @@ class _SongscreenState extends State<Songscreen> {
 
   @override
   Widget build(BuildContext context) {
-    var Height = MediaQuery.of(context).size.height;
-    var Width = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
       body: Stack(
@@ -77,19 +77,18 @@ class _SongscreenState extends State<Songscreen> {
                   return const CircularProgressIndicator();
                 }
                 if (item.data!.isEmpty) {
-                  return const Text("Nothing found!");
+                  return const Text('Nothing found!');
                 }
 
                 return ListView.builder(
                   itemCount: songs.length,
                   itemBuilder: (context, index) {
-                    if (songs[index].data.contains("mp3")) {
+                    if (songs[index].data.contains('mp3')) {
                       return Column(
                         children: [
                           GestureDetector(
                             onTap: () {
                               currentIndex = index;
-
 
                               Navigator.push(
                                   context,
@@ -97,7 +96,7 @@ class _SongscreenState extends State<Songscreen> {
                                     builder: (context) => PlayScreen(
                                       changeTrack: changeTrack,
                                       songInfo: songs[currentIndex],
-                                      Key: Key,
+                                      key: Key,
                                       //TODO : GLOBAL KEY
                                     ),
                                   ));
@@ -108,12 +107,12 @@ class _SongscreenState extends State<Songscreen> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               subtitle: Text(
-                                songs[index].artist ?? "Unknown Artist",
+                                songs[index].artist ?? 'Unknown Artist',
                                 overflow: TextOverflow.ellipsis,
                               ),
                               trailing: SizedBox(
-                                height: Height / 7,
-                                width: Width / 7,
+                                height: screenHeight / 7,
+                                width: screenWidth / 7,
                                 child: const Icon(
                                   Icons.play_arrow_rounded,
                                   color: Colors.orange,
@@ -124,20 +123,17 @@ class _SongscreenState extends State<Songscreen> {
                                 artworkBorder: BorderRadius.circular(10),
                                 id: songs[index].id,
                                 type: ArtworkType.AUDIO,
-                                nullArtworkWidget:
-                                Container(
+                                nullArtworkWidget: Container(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: Colors.blueGrey),
-                                  child:const Image(
+                                  child: const Image(
                                     image: AssetImage('images/musicimage.png'),
                                   ),
                                 ),
-
-                                ),
                               ),
                             ),
-
+                          ),
                           const Divider(
                             height: 0,
                             indent: 5,

@@ -10,8 +10,6 @@ class Settingspage extends StatefulWidget {
 class _SettingspageState extends State<Settingspage> {
   @override
   Widget build(BuildContext context) {
-    var Height = MediaQuery.of(context).size.height;
-    var Width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
@@ -83,9 +81,10 @@ class _SettingspageState extends State<Settingspage> {
                   onTap: () {
                     showAboutDialog(
                       context: context,
-                      applicationName: "Lyrica",
+                      applicationName: 'Lyrica',
                       applicationVersion: '1.0.1',
-                      applicationLegalese: "Copyright © Lyrica ${DateTime.now().year.toString()}",
+                      applicationLegalese:
+                      'Copyright © Lyrica ${DateTime.now().year.toString()}',
                     );
                   },
                 ),
@@ -94,5 +93,4 @@ class _SettingspageState extends State<Settingspage> {
           )),
     );
   }
-
 }

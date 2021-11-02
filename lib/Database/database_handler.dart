@@ -35,12 +35,12 @@ class DatabaseHandler {
   }
 
 
-  Future<void> deleteUser(int id) async {
+  Future<void> deleteUser(int num) async {
     final db = await initializeDB();
     await db.delete(
       'users',
-      where: "id = ?",
-      whereArgs: [id],
+      where: "num = ?",
+      whereArgs: [num],
     );
   }
 

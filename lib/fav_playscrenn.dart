@@ -7,13 +7,16 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:rxdart/rxdart.dart';
 import './notification_controll.dart';
 
-
 class FavPlayScreen extends StatefulWidget {
   SongModel songData;
-   FavPlayScreen({required this.songData,required this.changeTrack,required this.Key}) : super(key: Key);
+
+  FavPlayScreen(
+      {required this.songData, required this.changeTrack, required this.key})
+      : super(key: key);
 
   Function changeTrack;
- final GlobalKey<FavPlayScreenState> Key;
+  @override
+  final GlobalKey<FavPlayScreenState> key;
 
   @override
   FavPlayScreenState createState() => FavPlayScreenState();
@@ -24,10 +27,10 @@ class FavPlayScreenState extends State<FavPlayScreen> {
   String currentTime = '', endTime = '';
   bool isPlaying = false;
 
-
   // late final PageManger _pageManager;
 
   final AudioPlayer player = AudioPlayer();
+
   @override
   void initState() {
     super.initState();
@@ -35,15 +38,17 @@ class FavPlayScreenState extends State<FavPlayScreen> {
     setSong(widget.songData);
     player.play();
   }
-  void dispose(){
+
+  @override
+  void dispose() {
     super.dispose();
     player.dispose();
   }
 
-  double valueReturn(double min, double max, double current){
-    if(current >= min && current <= max){
+  double valueReturn(double min, double max, double current) {
+    if (current >= min && current <= max) {
       return current;
-    }else{
+    } else {
       setState(() {
         widget.changeTrack(true);
       });
@@ -56,7 +61,6 @@ class FavPlayScreenState extends State<FavPlayScreen> {
   //   // _pageManager.dispose();
   //   super.dispose();
   // }
-
 
   void setSong(SongModel songData) async {
     widget.songData = songData;
@@ -103,41 +107,32 @@ class FavPlayScreenState extends State<FavPlayScreen> {
   }
 
   String getDuration(double value) {
-    Duration duration = Duration(milliseconds: value.round());
+    final Duration duration = Duration(milliseconds: value.round());
 
     return [duration.inMinutes, duration.inSeconds]
         .map((element) => element.remainder(60).toString().padLeft(2, '0'))
         .join(':');
   }
 
-
-
   int fav = 0;
   int shuffle = 0;
   int repeat = 0;
   int play = 0;
 
-
-  bool isPaused=false;
-
-
-
+  bool isPaused = false;
 
   Stream<PositionData> get _positionDataStream =>
       Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
           player.positionStream,
           player.bufferedPositionStream,
           player.durationStream,
-              (position, bufferedPosition, duration) =>
+          (position, bufferedPosition, duration) =>
               PositionData(position, duration ?? Duration.zero));
-
-
-
 
   @override
   Widget build(BuildContext context) {
-    var Height = MediaQuery.of(context).size.height;
-    var Width = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -148,8 +143,8 @@ class FavPlayScreenState extends State<FavPlayScreen> {
                   top: 0,
                   left: 0,
                   right: 0,
-                  height: Height - 168,
-                  child:StreamBuilder<SequenceState?>(
+                  height: screenHeight - 168,
+                  child: StreamBuilder<SequenceState?>(
                     stream: player.sequenceStateStream,
                     builder: (context, snapshot) {
                       return QueryArtworkWidget(
@@ -190,7 +185,6 @@ class FavPlayScreenState extends State<FavPlayScreen> {
                         Navigator.pop(context);
                       },
                     ),
-
                   ),
                 ),
                 Positioned(
@@ -198,7 +192,7 @@ class FavPlayScreenState extends State<FavPlayScreen> {
                   left: 0,
                   right: 0,
                   child: Container(
-                    height: Height / 2.3,
+                    height: screenHeight / 2.3,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.zero, topRight: Radius.circular(60)),
@@ -263,8 +257,8 @@ class FavPlayScreenState extends State<FavPlayScreen> {
                         // ),
                         SizedBox(
                           height: 50,
-                          width: Width,
-                          child:  StreamBuilder<SequenceState?>(
+                          width: screenWidth,
+                          child: StreamBuilder<SequenceState?>(
                             stream: player.sequenceStateStream,
                             builder: (context, snapshot) {
                               return Marquee(
@@ -280,48 +274,31 @@ class FavPlayScreenState extends State<FavPlayScreen> {
                             },
                           ),
                         ),
-                         const Text('<unknown>'),
+                        const Text('<unknown>'),
                         const SizedBox(
                           height: 10,
                         ),
 
                         SizedBox(
-                            width: Width-15,
-                            height: 50,
-                            child: StreamBuilder<PositionData>(
-                              stream: _positionDataStream,
-                              builder: (context, snapshot) {
-                                final positionData = snapshot.data;
-                                return SeekBar(
-                                  duration:
-                                  positionData?.duration ?? Duration.zero,
-                                  position:
-                                  positionData?.position ?? Duration.zero,
-                                  onChangeEnd: (newPosition) {
-                                    player.seek(newPosition);
-                                  },
-                                );
-                              },
-                            ),
+                          width: screenWidth - 15,
+                          height: 50,
+                          child: StreamBuilder<PositionData>(
+                            stream: _positionDataStream,
+                            builder: (context, snapshot) {
+                              final positionData = snapshot.data;
+                              return SeekBar(
+                                duration:
+                                    positionData?.duration ?? Duration.zero,
+                                position:
+                                    positionData?.position ?? Duration.zero,
+                                onChangeEnd: (newPosition) {
+                                  player.seek(newPosition);
+                                },
+                              );
+                            },
+                          ),
                         ),
-                        // Container(
-                        //   padding: const EdgeInsets.symmetric(horizontal: 30),
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //     children: [
-                        //       Text(currentTime,
-                        //         style: const TextStyle(
-                        //           color: Colors.black,
-                        //           fontSize: 15,
-                        //         ),),
-                        //       Text(endTime,
-                        //         style: const TextStyle(
-                        //           color: Colors.black,
-                        //           fontSize: 15,
-                        //         ),),
-                        //     ],
-                        //   ),
-                        // ),
+
                         Column(
                           children: [
                             Row(
@@ -341,33 +318,33 @@ class FavPlayScreenState extends State<FavPlayScreen> {
                                       }),
                                 ),
                                 SizedBox(
-                                    height: 90,
-                                    width: 90,
-                                    child:StreamBuilder<PlayerState>(
-                                      stream: player.playerStateStream,
-                                      builder: (context, snapshot) {
-                                        final playerState = snapshot.data;
-                                        final playing = playerState?.playing;
-                                        if (playing != true) {
-                                          return IconButton(
-                                            icon: const Icon(
-                                              Icons.play_circle_fill,
+                                  height: 90,
+                                  width: 90,
+                                  child: StreamBuilder<PlayerState>(
+                                    stream: player.playerStateStream,
+                                    builder: (context, snapshot) {
+                                      final playerState = snapshot.data;
+                                      final playing = playerState?.playing;
+                                      if (playing != true) {
+                                        return IconButton(
+                                          icon: const Icon(
+                                            Icons.play_circle_fill,
+                                            color: Colors.orange,
+                                            size: 70,
+                                          ),
+                                          onPressed: player.play,
+                                        );
+                                      } else {
+                                        return IconButton(
+                                          icon: const Icon(
+                                              Icons.pause_circle_filled,
                                               color: Colors.orange,
-                                              size: 70,
-                                            ),
-                                            onPressed: player.play,
-                                          );
-                                        } else {
-                                          return IconButton(
-                                            icon: const Icon(
-                                                Icons.pause_circle_filled,
-                                                color: Colors.orange,
-                                                size: 70),
-                                            onPressed: player.pause,
-                                          );
-                                        }
-                                      },
-                                    ),
+                                              size: 70),
+                                          onPressed: player.pause,
+                                        );
+                                      }
+                                    },
+                                  ),
                                 ),
                                 StreamBuilder<SequenceState?>(
                                   stream: player.sequenceStateStream,

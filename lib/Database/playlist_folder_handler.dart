@@ -6,20 +6,23 @@ import './playlist_db.dart';
 
 class PlaylistDatabaseHandler {
   Future<Database> initializeDB() async {
-    String dbpath = await getDatabasesPath();
+    final String dbpath = await getDatabasesPath();
     return openDatabase(
-      join(dbpath, "playlistDB.db"),
+      join(dbpath, 'playlistDB.db'),
       version: 1,
       onCreate: (
         database,
         version,
       ) async {
-        print("Create playlist");
+        print('Create playlist');
         await database.execute(
-          "CREATE TABLE playlist(id INTEGER PRIMARY KEY AUTOINCREMENT,playListName TEXT NOT NULL)",
+          'CREATE TABLE playlist(id INTEGER PRIMARY KEY AUTOINCREMENT,'
+              'playListName TEXT NOT NULL)',
         );
         await database.execute(
-          "CREATE TABLE songs(id INTEGER PRIMARY KEY AUTOINCREMENT,songID INTEGER NOT NULL,playlistID INTEGER NOT NULL,songName TEXT NOT NULL,path TEXT)",
+          'CREATE TABLE songs(id INTEGER PRIMARY KEY AUTOINCREMENT,'
+              'songID INTEGER NOT NULL,playlistID INTEGER NOT NULL,'
+              'songName TEXT NOT NULL,path TEXT)',
         );
       },
     );
@@ -40,7 +43,8 @@ class PlaylistDatabaseHandler {
     final Database db = await initializeDB();
     for (var song in songs) {
       result = await db.insert('songs', song.toMapForDB());
-      print('Playlistsongresultssssssssssssssssssssssssssssssssssssssss:$result');
+      print(
+          'Playlistsongresultssssssssssssssssssssssssssssssssssssssss:$result');
     }
     return result;
   }
@@ -48,14 +52,12 @@ class PlaylistDatabaseHandler {
   Future<List<PlaylistFolder>> retrievePlaylist() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('playlist');
-    debugPrint("Query result: $queryResult");
     return queryResult.map((e) => PlaylistFolder.fromMap(e)).toList();
   }
 
   Future<List<PlaylistSongs>> retrieveSongs() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('songs');
-    debugPrint("playlist song Query result: $queryResult");
     return queryResult.map((e) => PlaylistSongs.fromMap(e)).toList();
   }
 
@@ -63,19 +65,19 @@ class PlaylistDatabaseHandler {
     final db = await initializeDB();
     await db.delete(
       'playlist',
-      where: "id = ?",
+      where: 'id = ?',
       whereArgs: [id],
     );
-    debugPrint("PLAYLIST DELETED");
+    debugPrint('PLAYLIST DELETED');
   }
 
   Future<void> deleteSongs(int id) async {
     final db = await initializeDB();
     await db.delete(
       'songs',
-      where: "id = ?",
+      where: 'id = ?',
       whereArgs: [id],
     );
-    debugPrint("song deleted");
+    debugPrint('song deleted');
   }
 }

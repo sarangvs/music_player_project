@@ -13,11 +13,12 @@ class PlayScreen extends StatefulWidget {
   SongModel songInfo;
 
   PlayScreen(
-      {required this.songInfo, required this.changeTrack, required this.Key})
-      : super(key: Key);
+      {required this.songInfo, required this.changeTrack, required this.key})
+      : super(key: key);
 
   Function changeTrack;
-  final GlobalKey<PlayScreenState> Key;
+  @override
+  final GlobalKey<PlayScreenState> key;
 
   @override
   PlayScreenState createState() => PlayScreenState();
@@ -49,7 +50,8 @@ class PlayScreenState extends State<PlayScreen> {
     player.play();
   }
 
-  void dispose(){
+  @override
+  void dispose() {
     super.dispose();
     player.dispose();
   }
@@ -70,12 +72,6 @@ class PlayScreenState extends State<PlayScreen> {
     }
   }
 
-  //  @override
-  //  void dispose() {
-  // _pageManager.dispose();
-  //    super.dispose();
-  //  }
-
   Stream<PositionData> get _positionDataStream =>
       Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
           player.positionStream,
@@ -86,13 +82,9 @@ class PlayScreenState extends State<PlayScreen> {
 
   ///ADDING SONGS
   Future<int> addUser(songTitle_2, songId_2, songData_2) async {
-    User firstUser =
+    final User firstUser =
         User(name: songTitle_2, num: songId_2, location: songData_2);
-    List<User> listOfUsers = [firstUser];
-    print("songtilte:$songTitle_2");
-    print("songid: $songId_2");
-    print("songdata: $songData_2");
-    print('list of users $listOfUsers');
+    final List<User> listOfUsers = [firstUser];
     return await handler!.insertUser(listOfUsers);
   }
 
@@ -117,7 +109,7 @@ class PlayScreenState extends State<PlayScreen> {
         currentTime = getDuration(currentValue);
         if (currentValue == maximumValue) {
           widget.changeTrack(true);
-           songFav();
+          songFav();
         }
       });
     });
@@ -144,14 +136,12 @@ class PlayScreenState extends State<PlayScreen> {
 
   void nextSong() {
     setState(() {
-
-        widget.changeTrack(true);
-
+      widget.changeTrack(true);
     });
   }
 
   String getDuration(double value) {
-    Duration duration = Duration(milliseconds: value.round());
+    final Duration duration = Duration(milliseconds: value.round());
 
     return [duration.inMinutes, duration.inSeconds]
         .map((element) => element.remainder(60).toString().padLeft(2, '0'))
@@ -166,13 +156,12 @@ class PlayScreenState extends State<PlayScreen> {
 //  bool isPlaying=false;
   bool isPaused = false;
 
-
   @override
   Widget build(BuildContext context) {
     // var bookmarkBloc = Provider.of<BookMarkBloc>(context);
 
-    var Height = MediaQuery.of(context).size.height;
-    var Width = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -183,7 +172,7 @@ class PlayScreenState extends State<PlayScreen> {
                   top: 0,
                   left: 0,
                   right: 0,
-                  height: Height - 250,
+                  height: screenHeight - 250,
                   child: StreamBuilder<SequenceState?>(
                     stream: player.sequenceStateStream,
                     builder: (context, snapshot) {
@@ -232,7 +221,7 @@ class PlayScreenState extends State<PlayScreen> {
                   left: 0,
                   right: 0,
                   child: Container(
-                    height: Height / 2.3,
+                    height: screenHeight / 2.3,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.zero, topRight: Radius.circular(60)),
@@ -319,7 +308,7 @@ class PlayScreenState extends State<PlayScreen> {
                         ),
                         SizedBox(
                           height: 50,
-                          width: Width,
+                          width: screenWidth,
                           child: StreamBuilder<SequenceState?>(
                             stream: player.sequenceStateStream,
                             builder: (context, snapshot) {
@@ -349,12 +338,11 @@ class PlayScreenState extends State<PlayScreen> {
                             );
                           },
                         ),
-
                         const SizedBox(
                           height: 10,
                         ),
                         SizedBox(
-                          width: Width - 15,
+                          width: screenWidth - 15,
                           height: 50,
                           child: StreamBuilder<PositionData>(
                             stream: _positionDataStream,
@@ -372,29 +360,6 @@ class PlayScreenState extends State<PlayScreen> {
                             },
                           ),
                         ),
-                        // Container(
-                        //   color: Colors.red,
-                        //  // padding: const EdgeInsets.symmetric(horizontal: 30),
-                        //   child: Row(
-                        //   //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //     children: [
-                        //       Text(
-                        //         currentTime,
-                        //         style: const TextStyle(
-                        //           color: Colors.white,
-                        //           fontSize: 20,
-                        //         ),
-                        //       ),
-                        //       Text(
-                        //         endTime,
-                        //         style: const TextStyle(
-                        //           color: Colors.white,
-                        //           fontSize: 20,
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                         Column(
                           children: [
                             Row(
@@ -421,7 +386,8 @@ class PlayScreenState extends State<PlayScreen> {
                                     stream: player.playerStateStream,
                                     builder: (context, snapshot) {
                                       final playerState = snapshot.data;
-                                      final processingState = playerState?.processingState;
+                                      final processingState =
+                                          playerState?.processingState;
                                       final playing = playerState?.playing;
                                       if (playing != true) {
                                         return IconButton(
@@ -435,8 +401,7 @@ class PlayScreenState extends State<PlayScreen> {
                                       } else if (processingState !=
                                           ProcessingState.completed) {
                                         return IconButton(
-                                          icon:
-                                          const Icon(
+                                          icon: const Icon(
                                               Icons.pause_circle_filled,
                                               color: Colors.orange,
                                               size: 70),
@@ -445,10 +410,10 @@ class PlayScreenState extends State<PlayScreen> {
                                       } else {
                                         return StreamBuilder<PlayerState>(
                                             stream: player.playerStateStream,
-                                         builder: (context, snapshot) {
-                                          return  widget.changeTrack(true);
+                                            builder: (context, snapshot) {
+                                              return widget.changeTrack(true);
+                                            });
                                       }
-                                        );}
                                     },
                                   ),
                                 ),
@@ -484,54 +449,3 @@ class PositionData {
 
   PositionData(this.position, this.duration);
 }
-
-// void showSliderDialog({
-//   required BuildContext context,
-//   required String title,
-//   required int divisions,
-//   required double min,
-//   required double max,
-//   String valueSuffix = '',
-//   required double value,
-//   required Stream<double> stream,
-//   required ValueChanged<double> onChanged,
-// }) {
-//   showDialog<void>(
-//     context: context,
-//     builder: (context) => AlertDialog(
-//       backgroundColor: Colors.white,
-//       title: Text(title,
-//           textAlign: TextAlign.center,
-//           style: const TextStyle(
-//               color: Colors.white,
-//               fontFamily: 'Gemunu',
-//               fontWeight: FontWeight.bold,
-//               fontSize: 24.0)),
-//       content: StreamBuilder<double>(
-//         stream: stream,
-//         builder: (context, snapshot) => Container(
-//           height: 100.0,
-//           child: Column(
-//             children: [
-//               Text('${snapshot.data?.toStringAsFixed(1)}$valueSuffix',
-//                   style: const TextStyle(
-//                       color: Colors.white,
-//                       fontFamily: 'Gemunu',
-//                       fontWeight: FontWeight.bold,
-//                       fontSize: 24.0)),
-//               Slider(
-//                 inactiveColor: Colors.grey,
-//                 activeColor: Colors.white,
-//                 divisions: divisions,
-//                 min: min,
-//                 max: max,
-//                 value: snapshot.data ?? value,
-//                 onChanged: onChanged,
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     ),
-//   );
-// }

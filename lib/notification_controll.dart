@@ -19,7 +19,6 @@ class SeekBar extends StatefulWidget {
 }
 
 class _SeekBarState extends State<SeekBar> {
-  double? _dragValue;
   late SliderThemeData _sliderThemeData;
 
   @override
@@ -47,7 +46,6 @@ class _SeekBarState extends State<SeekBar> {
               widget.duration.inMilliseconds.toDouble()),
           onChanged: (value) {
             setState(() {
-              _dragValue = value;
             });
             if (widget.onChanged != null) {
               widget.onChanged!(Duration(milliseconds: value.round()));
@@ -57,7 +55,6 @@ class _SeekBarState extends State<SeekBar> {
             if (widget.onChangeEnd != null) {
               widget.onChangeEnd!(Duration(milliseconds: value.round()));
             }
-            _dragValue = null;
           },
         ),
       ),
@@ -66,20 +63,20 @@ class _SeekBarState extends State<SeekBar> {
         bottom: -4,
         child: Text(
             RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
-                    .firstMatch("$_position")
+                    .firstMatch('$_position')
                     ?.group(1) ??
                 '$_position',
-            style: TextStyle(color: Colors.black,fontSize: 15)),
+            style: const TextStyle(color: Colors.black,fontSize: 15)),
       ),
       Positioned(
         right: 20.0,
         bottom: -4,
         child:Text(
             RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
-                .firstMatch("$_remaining")
+                .firstMatch('$_remaining')
                 ?.group(1) ??
                 '$_remaining',
-            style: TextStyle(color: Colors.black,fontSize: 15)),
+            style: const TextStyle(color: Colors.black,fontSize: 15)),
       ),
     ]);
   }
@@ -87,64 +84,3 @@ class _SeekBarState extends State<SeekBar> {
   Duration get _remaining => widget.duration;
   Duration get _position => widget.position;
 }
-//
-// class HiddenThumbComponentShape extends SliderComponentShape {
-//   @override
-//   Size getPreferredSize(bool isEnabled, bool isDiscrete) => Size.zero;
-//
-//   @override
-//   void paint(
-//     PaintingContext context,
-//     Offset center, {
-//     required Animation<double> activationAnimation,
-//     required Animation<double> enableAnimation,
-//     required bool isDiscrete,
-//     required TextPainter labelPainter,
-//     required RenderBox parentBox,
-//     required SliderThemeData sliderTheme,
-//     required TextDirection textDirection,
-//     required double value,
-//     required double textScaleFactor,
-//     required Size sizeWithOverflow,
-//   }) {}
-// }
-
-// void showSliderDialog({
-//   required BuildContext context,
-//   required String title,
-//   required int divisions,
-//   required double min,
-//   required double max,
-//   String valueSuffix = '',
-//   required Stream<double> stream,
-//   required ValueChanged<double> onChanged,
-// }) {
-//   showDialog<void>(
-//     context: context,
-//     builder: (context) => AlertDialog(
-//       title: Text(title, textAlign: TextAlign.center),
-//       content: StreamBuilder<double>(
-//         stream: stream,
-//         builder: (context, snapshot) => SizedBox(
-//           height: 100.0,
-//           child: Column(
-//             children: [
-//               Text('${snapshot.data?.toStringAsFixed(1)}$valueSuffix',
-//                   style: const TextStyle(
-//                       fontFamily: 'Fixed',
-//                       fontWeight: FontWeight.bold,
-//                       fontSize: 24.0)),
-//               Slider(
-//                 divisions: divisions,
-//                 min: min,
-//                 max: max,
-//                 value: snapshot.data ?? 1.0,
-//                 onChanged: onChanged,
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-// //     ),
-//   );
-// }

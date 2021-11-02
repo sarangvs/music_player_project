@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:musicplayer/Database/playlist_folder_handler.dart';
+import 'package:musicplayer/my_playlist.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'Database/playlist_songs.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -42,24 +43,19 @@ class _SelectPlaylistSongsState extends State<SelectPlaylistSongs> {
   }
 
   Future<int> addUsers(songID_2, playlistID_2, path_2, songName_2) async {
-    PlaylistSongs firstUser = PlaylistSongs(
+    final PlaylistSongs firstUser = PlaylistSongs(
         path: path_2,
         songName: songName_2,
         songID: songID_2,
         playlistID: playlistID_2);
-    List<PlaylistSongs> listOfUsers = [firstUser];
-    print("songtilte:$songName_2");
-    print("songid: $songID_2");
-    print("songdata: $path_2");
-    print('song playlist id$playlistID_2');
-    print('list of users $listOfUsers');
+    final List<PlaylistSongs> listOfUsers = [firstUser];
     return await playlistSongHandler.insertSongs(listOfUsers);
   }
 
   @override
   Widget build(BuildContext context) {
-    var Height = MediaQuery.of(context).size.height;
-    var Width = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
       backgroundColor: Colors.grey[50],
@@ -77,7 +73,11 @@ class _SelectPlaylistSongsState extends State<SelectPlaylistSongs> {
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Myplaylist(),
+                ));
           },
         ),
       ),
@@ -93,13 +93,13 @@ class _SelectPlaylistSongsState extends State<SelectPlaylistSongs> {
             return const CircularProgressIndicator();
           }
           if (item.data!.isEmpty) {
-            return const Text("Nothing found!");
+            return const Text('Nothing found!');
           }
 
           return ListView.builder(
             itemCount: playlistsongs.length,
             itemBuilder: (context, index) {
-              if (playlistsongs[index].data.contains("mp3")) {
+              if (playlistsongs[index].data.contains('mp3')) {
                 return Column(
                   children: [
                     GestureDetector(
@@ -122,12 +122,12 @@ class _SelectPlaylistSongsState extends State<SelectPlaylistSongs> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         subtitle: Text(
-                          playlistsongs[index].artist ?? "Unknown Artist",
+                          playlistsongs[index].artist ?? 'Unknown Artist',
                           overflow: TextOverflow.ellipsis,
                         ),
                         trailing: SizedBox(
-                          height: Height / 7,
-                          width: Width / 7,
+                          height: screenHeight / 7,
+                          width: screenWidth / 7,
                           child: IconButton(
                             icon: const Icon(Icons.add_circle_outline),
                             //   : const Icon(
@@ -156,14 +156,11 @@ class _SelectPlaylistSongsState extends State<SelectPlaylistSongs> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: Colors.blueGrey),
-                            child:const Image(
+                            child: const Image(
                               image: AssetImage('images/musicimage.png'),
                             ),
                           ),
                         ),
-                        onTap: () {
-                          //addPlaylistSongs(songID_2, playlistID_2, songName_2, path_2);
-                        },
                       ),
                     ),
                     const Divider(
@@ -183,15 +180,14 @@ class _SelectPlaylistSongsState extends State<SelectPlaylistSongs> {
     ));
   }
 
- void showToast(){
-   Fluttertoast.showToast(
-       msg: "Song added to playlist",
-       toastLength: Toast.LENGTH_SHORT,
-       gravity: ToastGravity.BOTTOM,
-       timeInSecForIosWeb: 1,
-       backgroundColor: Colors.black87,
-       textColor: Colors.white,
-       fontSize: 15.0
-   );
- }
+  void showToast() {
+    Fluttertoast.showToast(
+        msg: 'Song added to playlist',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black87,
+        textColor: Colors.white,
+        fontSize: 15.0);
+  }
 }

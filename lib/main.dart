@@ -45,28 +45,20 @@ class Appbar extends StatefulWidget {
   _AppbarState createState() => _AppbarState();
 }
 
-var obj = Songscreen();
+var obj = const Songscreen();
 
 class _AppbarState extends State<Appbar> {
-  bool isSearching = false;
-  final GlobalKey<PlayScreenState> Key = GlobalKey<PlayScreenState>();
+  final GlobalKey<PlayScreenState> key = GlobalKey<PlayScreenState>();
 
- // late final PageManger _pageManager;
 
-  //late final PlayScreen _playScreen;
-  late final Songscreen _songscreen;
 
   @override
   void initState() {
     super.initState();
- //   _pageManager = PageManger();
-    _songscreen = const Songscreen();
   }
 
   @override
   void dispose() {
- //   _pageManager.dispose();
-    _songscreen = const Songscreen();
     super.dispose();
   }
 
@@ -79,8 +71,6 @@ class _AppbarState extends State<Appbar> {
 
   @override
   Widget build(BuildContext context) {
-    var Height = MediaQuery.of(context).size.height;
-    var Width = MediaQuery.of(context).size.width;
     return DefaultTabController(
         length: 3,
         child: SafeArea(
@@ -89,19 +79,15 @@ class _AppbarState extends State<Appbar> {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            title: !isSearching
-                ? const Text(
+            title:const Text(
                     'Lyrica',
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 25,
                         fontFamily: 'Exo2'),
-                  )
-                : const TextField(
-                    decoration: InputDecoration(hintText: 'Search'),
-                    style: TextStyle(color: Colors.black),
                   ),
+
             actions: [
               IconButton(
                 padding: const EdgeInsets.only(
@@ -172,7 +158,8 @@ class _AppbarState extends State<Appbar> {
               //       onTap: () {
               //         Navigator.push(
               //           context,
-              //           MaterialPageRoute(builder: (context) =>  PlayScreen(songInfo:null ,changeTrack: null, Key: null,)),
+              //     MaterialPageRoute(builder: (context) =>
+              //     PlayScreen(songInfo:null ,changeTrack: null, Key: null,)),
               //         );
               //       },
               //       child: Container(
@@ -187,7 +174,7 @@ class _AppbarState extends State<Appbar> {
               //                   child: Center(
               //                     child: RichText(
               //                       text: const TextSpan(
-              //                         text: "The Kid LAROI, Justin Bieber - STAY",
+              //                    text: "The Kid LAROI, Justin Bieber - STAY",
               //                         style: TextStyle(
               //                             fontSize: 16,
               //                             fontWeight: FontWeight.bold,
@@ -195,7 +182,7 @@ class _AppbarState extends State<Appbar> {
               //                             color: Colors.black87),
               //                         children: [],
               //                       ),
-              //                       overflow: TextOverflow.ellipsis,maxLines: 1,
+              //                   overflow: TextOverflow.ellipsis,maxLines: 1,
               //                     ),
               //                   ),
               //                 ),
@@ -204,13 +191,13 @@ class _AppbarState extends State<Appbar> {
               //                       child: SizedBox(
               //                         height: Height / 7,
               //                         width: Width / 8,
-              //                         child: ValueListenableBuilder<ButtonState>(
-              //                             valueListenable: _pageManager.buttonNotifier,
+              //                   child: ValueListenableBuilder<ButtonState>(
+              //                 valueListenable: _pageManager.buttonNotifier,
               //                             builder: (_,value,__){
               //                               switch(value){
               //                                 case ButtonState.paused:
               //                                   return IconButton(
-              //                                     icon: const Icon(Icons.play_circle_fill),
+              //                      icon: const Icon(Icons.play_circle_fill),
               //                                     iconSize: 70,
               //                                     color: Colors.redAccent,
               //                                     onPressed: (){
@@ -219,7 +206,7 @@ class _AppbarState extends State<Appbar> {
               //                                   );
               //                                 case ButtonState.playing:
               //                                   return IconButton(
-              //                                     icon: const Icon(Icons.pause_circle_filled),
+              //                   icon: const Icon(Icons.pause_circle_filled),
               //                                     iconSize: 70,
               //                                     color: Colors.redAccent,
               //                                     onPressed: (){

@@ -16,7 +16,7 @@ class PlaylistScreen extends StatefulWidget {
 }
 
 class _PlaylistScreenState extends State<PlaylistScreen> {
-  final GlobalKey<FavPlayScreenState> Key = GlobalKey<FavPlayScreenState>();
+  final GlobalKey<FavPlayScreenState> key = GlobalKey<FavPlayScreenState>();
 
   List<SongModel> playlistSongs = [];
   int currentIndex = 0;
@@ -50,13 +50,13 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         currentIndex--;
       }
     }
-    Key.currentState!.setSong(playlistSongs[currentIndex]);
+    key.currentState!.setSong(playlistSongs[currentIndex]);
   }
 
   @override
   Widget build(BuildContext context) {
-    var Height = MediaQuery.of(context).size.height;
-    var Width = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -79,17 +79,17 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
             top: 0,
             left: 30,
             right: 0,
-            height: Height / 8,
+            height: screenHeight / 8,
             child: const Text(
-              "Liked Songs",
+              'Liked Songs',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ),
           Positioned(
             top: 0,
-            left: Width - 40,
+            left: screenWidth - 40,
             right: 0,
-            height: Height / 26,
+            height: screenHeight / 26,
             child: InkWell(
               child: const Icon(Icons.playlist_add),
               onTap: () {
@@ -106,8 +106,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           ),
           Positioned(
             top: 28,
-            height: Height,
-            width: Width,
+            height: screenHeight,
+            width: screenWidth,
             child: FutureBuilder(
               future: _playlistDatabaseHandler!.retrieveSongs(),
               builder: (BuildContext context,
@@ -142,8 +142,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           trailing: SizedBox(
-                            height: Height / 7,
-                            width: Width / 7,
+                            height: screenHeight / 7,
+                            width: screenWidth / 7,
                             child: const Icon(
                               Icons.play_arrow_rounded,
                               color: Colors.orange,
@@ -154,19 +154,20 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             artworkBorder: BorderRadius.circular(10),
                             id: snapshot.data![index].songID,
                             type: ArtworkType.AUDIO,
-                            nullArtworkWidget:  Container(
+                            nullArtworkWidget: Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.blueGrey),
-                              child:const Image(
+                              child: const Image(
                                 image: AssetImage('images/musicimage.png'),
                               ),
                             ),
                           ),
                           onTap: () {
-                            for(int i = 0; i<playlistSongs.length;i++){
-                              if(playlistSongs[i].id== snapshot.data![index].songID){
-                                currentIndex=i;
+                            for (int i = 0; i < playlistSongs.length; i++) {
+                              if (playlistSongs[i].id ==
+                                  snapshot.data![index].songID) {
+                                currentIndex = i;
                                 break;
                               }
                             }
@@ -176,7 +177,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                   builder: (context) => FavPlayScreen(
                                       songData: playlistSongs[currentIndex],
                                       changeTrack: changeTrack,
-                                      Key: Key),
+                                      key: key),
                                 ));
                           },
                         ),

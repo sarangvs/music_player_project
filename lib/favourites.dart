@@ -14,10 +14,10 @@ class Favourites extends StatefulWidget {
 }
 
 class _FavouritesState extends State<Favourites> {
-  final GlobalKey<FavPlayScreenState> Key = GlobalKey<FavPlayScreenState>();
+  final GlobalKey<FavPlayScreenState> key = GlobalKey<FavPlayScreenState>();
 
   List<SongModel> favSongs = [];
-  int currentIndex = 0;
+  int currentIndexFav = 0;
 
   DatabaseHandler? handler;
   late final AudioPlayer player;
@@ -39,31 +39,31 @@ class _FavouritesState extends State<Favourites> {
     });
   }
 
-  void changeTrack(bool isNext) {
+  void changeFavTrack(bool isNext) {
     if (isNext) {
-      if (currentIndex != favSongs.length - 1) {
-        currentIndex++;
+      if (currentIndexFav != favSongs.length - 1) {
+        currentIndexFav++;
       }
     } else {
-      if (currentIndex != 0) {
-        currentIndex--;
+      if (currentIndexFav != 0) {
+        currentIndexFav--;
       }
     }
-    Key.currentState!.setSong(favSongs[currentIndex]);
+    key.currentState!.setSong(favSongs[currentIndexFav]);
   }
 
   @override
   Widget build(BuildContext context) {
     // var bookmarkBloc = Provider.of<BookMarkBloc>(context);
 
-    var Height = MediaQuery.of(context).size.height;
-    var Width = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         body: Stack(
           children: [
             FutureBuilder(
-              future: this.handler!.retrieveUsers(),
+              future: handler!.retrieveUsers(),
               builder:
                   (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
                 if (snapshot.hasData) {
@@ -95,8 +95,8 @@ class _FavouritesState extends State<Favourites> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           trailing: SizedBox(
-                            height: Height / 7,
-                            width: Width / 7,
+                            height: screenHeight / 7,
+                            width: screenWidth / 7,
                             child: const Icon(
                               Icons.play_arrow_rounded,
                               color: Colors.orange,
@@ -119,7 +119,7 @@ class _FavouritesState extends State<Favourites> {
                           onTap: () {
                            for(int i = 0; i<favSongs.length;i++){
                              if(favSongs[i].id== snapshot.data![index].num){
-                               currentIndex=i;
+                               currentIndexFav=i;
                                break;
                              }
                            }
@@ -127,9 +127,9 @@ class _FavouritesState extends State<Favourites> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => FavPlayScreen(
-                                    songData: favSongs[currentIndex],
-                                    changeTrack: changeTrack,
-                                    Key: Key,
+                                    songData: favSongs[currentIndexFav],
+                                    changeTrack: changeFavTrack,
+                                    key: key,
                                   ),
                                 ));
                           },
