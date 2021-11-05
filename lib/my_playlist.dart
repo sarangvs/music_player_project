@@ -15,7 +15,7 @@ class _MyplaylistState extends State<Myplaylist> {
   late PlaylistDatabaseHandler playlistHandler;
   dynamic playlistFolderName;
   dynamic songData;
-  dynamic playlistID = 1;
+  dynamic playlistID = 0;
 
   @override
   void initState() {
@@ -145,6 +145,9 @@ class _MyplaylistState extends State<Myplaylist> {
                                           ),
                                         ),
                                         onTap: () {
+                                          setState(() {
+                                            playlistID=snapshot.data![index].id;
+                                          });
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(

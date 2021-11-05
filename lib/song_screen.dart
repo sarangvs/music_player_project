@@ -5,6 +5,8 @@ import 'package:just_audio/just_audio.dart';
 import 'package:musicplayer/play_screen.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
+import 'Database/database_handler.dart';
+
 class Songscreen extends StatefulWidget {
   const Songscreen({Key? key}) : super(key: key);
 
@@ -13,32 +15,39 @@ class Songscreen extends StatefulWidget {
 }
 
 class _SongscreenState extends State<Songscreen> {
-  final OnAudioQuery _audioQuery = OnAudioQuery();
-  final AudioPlayer player = AudioPlayer();
+  final OnAudioQuery audioQuery = OnAudioQuery();
+   late AudioPlayer player;
   List<SongModel> songs = [];
   int currentIndex = 0;
   final GlobalKey<PlayScreenState> Key = GlobalKey<PlayScreenState>();
+
 
   @override
   void initState() {
     super.initState();
     requestPermission();
     getTracks();
+    player = AudioPlayer();
     setState(() {});
+    // addSongsToFavourite(songTitle, songId, songLocation);
   }
 
+
   void requestPermission() async {
+    // Web platform don't support permissions methods.
     if (!kIsWeb) {
-      final bool permissionStatus = await _audioQuery.permissionsStatus();
+      final bool permissionStatus = await audioQuery.permissionsStatus();
       if (!permissionStatus) {
-        await _audioQuery.permissionsRequest();
+        await audioQuery.permissionsRequest();
       }
       setState(() {});
     }
   }
 
+
+
   void getTracks() async {
-    songs = await _audioQuery.querySongs();
+    songs = await audioQuery.querySongs();
     setState(() {
       songs = songs;
     });
@@ -67,7 +76,7 @@ class _SongscreenState extends State<Songscreen> {
         children: [
           Center(
             child: FutureBuilder<List<SongModel>>(
-              future: _audioQuery.querySongs(
+              future: audioQuery.querySongs(
                 sortType: SongSortType.DISPLAY_NAME,
                 orderType: OrderType.ASC_OR_SMALLER,
                 uriType: UriType.EXTERNAL,

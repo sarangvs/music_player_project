@@ -106,14 +106,8 @@ class _SettingspageState extends State<Settingspage> {
       throw 'Could not launch $url';
     }
   }
-  void _launchURLBrowser_() async {
-    const url = 'https://github.com/sarangvs/privacy-policy/blob/main/privacy-policy.md';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+
+
 
 
 }

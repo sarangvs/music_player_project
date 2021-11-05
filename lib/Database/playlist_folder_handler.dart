@@ -8,7 +8,7 @@ class PlaylistDatabaseHandler {
   Future<Database> initializeDB() async {
     final String dbpath = await getDatabasesPath();
     return openDatabase(
-      join(dbpath, 'playlistDB.db'),
+      join(dbpath, 'playlistsDB.db'),
       version: 1,
       onCreate: (
         database,
@@ -17,12 +17,12 @@ class PlaylistDatabaseHandler {
         print('Create playlist');
         await database.execute(
           'CREATE TABLE playlist(id INTEGER PRIMARY KEY AUTOINCREMENT,'
-              'playListName TEXT NOT NULL)',
+          'playListName TEXT NOT NULL)',
         );
         await database.execute(
           'CREATE TABLE songs(id INTEGER PRIMARY KEY AUTOINCREMENT,'
-              'songID INTEGER NOT NULL,playlistID INTEGER NOT NULL,'
-              'songName TEXT NOT NULL,path TEXT)',
+          'songID INTEGER NOT NULL,playlistID INTEGER NOT NULL,'
+          'songName TEXT NOT NULL,path TEXT)',
         );
       },
     );
@@ -55,9 +55,10 @@ class PlaylistDatabaseHandler {
     return queryResult.map((e) => PlaylistFolder.fromMap(e)).toList();
   }
 
-  Future<List<PlaylistSongs>> retrieveSongs() async {
+  Future<List<PlaylistSongs>> retrieveSongs(int playlistfolderID) async {
     final Database db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.query('songs');
+    final List<Map<String, Object?>> queryResult =
+        await db.query('songs', where: 'playlistID=="$playlistfolderID"');
     return queryResult.map((e) => PlaylistSongs.fromMap(e)).toList();
   }
 

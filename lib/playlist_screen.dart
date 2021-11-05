@@ -109,7 +109,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
             height: screenHeight,
             width: screenWidth,
             child: FutureBuilder(
-              future: _playlistDatabaseHandler!.retrieveSongs(),
+              future: _playlistDatabaseHandler!.retrieveSongs(widget.playlistfolderID),
               builder: (BuildContext context,
                   AsyncSnapshot<List<PlaylistSongs>> snapshot) {
                 if (snapshot.hasData) {
