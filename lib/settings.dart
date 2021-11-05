@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class Settingspage extends StatefulWidget {
   const Settingspage({Key? key}) : super(key: key);
@@ -42,7 +44,9 @@ class _SettingspageState extends State<Settingspage> {
                     color: Colors.black,
                   ),
                   minLeadingWidth: 10,
-                  onTap: () {},
+                  onTap: () {
+                    _launchURLBrowser();
+                  },
                 ),
                 ListTile(
                   title: const Text('Share App'),
@@ -93,4 +97,15 @@ class _SettingspageState extends State<Settingspage> {
           )),
     );
   }
+
+  void _launchURLBrowser() async {
+    const url = 'https://github.com/sarangvs/privacy-policy/blob/main/privacy-policy.md';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+
 }

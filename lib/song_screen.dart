@@ -22,17 +22,18 @@ class _SongscreenState extends State<Songscreen> {
   @override
   void initState() {
     super.initState();
-    getTracks();
     requestPermission();
+    getTracks();
+    setState(() {});
   }
 
-  requestPermission() async {
+  void requestPermission() async {
     if (!kIsWeb) {
-      bool permissionStatus = await _audioQuery.permissionsStatus();
+      final bool permissionStatus = await _audioQuery.permissionsStatus();
       if (!permissionStatus) {
         await _audioQuery.permissionsRequest();
       }
-      //setState(() {});
+      setState(() {});
     }
   }
 

@@ -73,11 +73,7 @@ class _SelectPlaylistSongsState extends State<SelectPlaylistSongs> {
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Myplaylist(),
-                ));
+          Navigator.of(context).pop();
           },
         ),
       ),

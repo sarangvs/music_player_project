@@ -33,7 +33,7 @@ class _MyplaylistState extends State<Myplaylist> {
   ///Add Playlist
   Future<int> addPlaylist(playlistFolderName) async {
     final PlaylistFolder firstUser =
-        PlaylistFolder(playListName: playlistFolderName);
+    PlaylistFolder(playListName: playlistFolderName);
     final List<PlaylistFolder> listOfUsers = [firstUser];
     return await playlistHandler.insertPlaylist(listOfUsers);
   }
@@ -88,7 +88,7 @@ class _MyplaylistState extends State<Myplaylist> {
                                         return AlertDialog(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(20),
+                                            BorderRadius.circular(20),
                                           ),
                                           backgroundColor: Colors.white,
                                           title: const Text(
@@ -107,7 +107,7 @@ class _MyplaylistState extends State<Myplaylist> {
                                               onPressed: () async {
                                                 await playlistHandler
                                                     .deletePlaylist(snapshot
-                                                        .data![index].id!);
+                                                    .data![index].id!);
                                                 setState(() {
                                                   snapshot.data!.remove(
                                                       snapshot.data![index]);
@@ -150,8 +150,8 @@ class _MyplaylistState extends State<Myplaylist> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     PlaylistScreen(
-                                                  playlistfolderID: playlistID,
-                                                ),
+                                                      playlistfolderID: playlistID,
+                                                    ),
                                               ));
                                         },
                                       ),
