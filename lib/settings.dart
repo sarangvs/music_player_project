@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:share_plus/share_plus.dart';
 
 class Settingspage extends StatefulWidget {
   const Settingspage({Key? key}) : super(key: key);
@@ -55,7 +55,9 @@ class _SettingspageState extends State<Settingspage> {
                     color: Colors.black,
                   ),
                   minLeadingWidth: 10,
-                  onTap: () {},
+                  onTap: () {
+                    Share.share('https://play.google.com/store/apps/details?id=com.sarangvs.musicplayer', subject: 'Try out Lyrica music player!');
+                  },
                 ),
                 ListTile(
                   title: const Text('Rate App'),
@@ -64,7 +66,9 @@ class _SettingspageState extends State<Settingspage> {
                     color: Colors.black,
                   ),
                   minLeadingWidth: 10,
-                  onTap: () {},
+                  onTap: () {
+                   _rateApp();
+                  },
                 ),
                 ListTile(
                   title: const Text('Help and Support'),
@@ -100,6 +104,15 @@ class _SettingspageState extends State<Settingspage> {
 
   void _launchURLBrowser() async {
     const url = 'https://github.com/sarangvs/privacy-policy/blob/main/privacy-policy.md';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void _rateApp() async {
+    const url = 'https://play.google.com/store/apps/details?id=com.sarangvs.musicplayer';
     if (await canLaunch(url)) {
       await launch(url);
     } else {

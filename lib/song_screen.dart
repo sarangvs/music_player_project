@@ -28,6 +28,7 @@ class _SongscreenState extends State<Songscreen> {
     requestPermission();
     getTracks();
     player = AudioPlayer();
+
     setState(() {});
     // addSongsToFavourite(songTitle, songId, songLocation);
   }
